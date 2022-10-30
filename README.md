@@ -4,27 +4,33 @@
 npx create-react-app . --template typescript
 ```
 
+vulnerabilities
+
 ## move react-script to devDependenci
 
->
-npmの設定ファイルpackage.jsonでreact-scriptをdependenciesからdevDependenciesに移してください。その上で、npm
+npmの設定ファイルpackage.jsonでreact-scriptをdependenciesからdevDependenciesに移してください。
+その上で、npm
 audit
---productionを使用するようにしてください。
->
->[create-react-appでは脆弱性の警告が出るが無視して良い](https://zenn.dev/appare45/articles/7f667031aab94b) >
->
-npmの設定ファイルpackage.jsonでreact-scriptをdependenciesからdevDependenciesに移してください。その上で、npm
->
-audit
->
---productionを使用するようにしてください。
->
->[create-react-appでは脆弱性の警告が出るが無視して良い](https://zenn.dev/appare45/articles/7f667031aab94b)
-[https://zenn.dev/appare45/articles/7f667031aab94b](https://zenn.dev/appare45/articles/7f667031aab94b)
->
+--production
+を使用するようにしてください。
+Help, `npm audit`
+says
+I
+have
+a
+vulnerability
+in
+react-scripts!
+·
+Issue
+#11174
+·
+facebook/create-react-app https://github.com/facebook/create-react-app/issues/11174
 
-## *
-.env* file.
+## create-react-appのパラメータ。(host,portなど)
+
+.env*
+file.を編集する。
 
 [Advanced Configuration \| Create React App](https://create-react-app.dev/docs/advanced-configuration)
 

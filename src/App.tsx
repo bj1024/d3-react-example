@@ -7,12 +7,9 @@ import CounterExample from "./components/counter";
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-
-      </header>
       <div className="App-main">
         <D3Example/>
-        <div>counter<CounterExample/></div>
+        {/*<div>counter<CounterExample/></div>*/}
       </div>
 
     </div>
