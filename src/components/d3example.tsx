@@ -20,7 +20,6 @@ const generateDataset = () => (
   ]))
 )
 
-
 export const D3Example = ({}: Props) => {
 
   const [dataset, setDataset] = useState(generateDataset())
@@ -30,17 +29,6 @@ export const D3Example = ({}: Props) => {
 
   useEffect(() => {
     const svgElement = d3.select(refSVG.current)
-    // svgElement.selectAll("rect")
-    //   .data(dataset)
-    //   .join("rect")
-    //   // .attr("cx", d => d[0])
-    //   // .attr("cy", d => d[1])
-    //   // .attr("r",  3)
-    //   .attr("x", d => d[0])
-    //   .attr("y", d => d[1])
-    //   .attr("width", d => d[2])
-    //   .attr("height", d => d[3])
-
 
     let div_data = svgElement.selectAll("rect") // 全てのRectをセレクト。
       .data(dataset)  // データをバインド。
@@ -66,16 +54,11 @@ export const D3Example = ({}: Props) => {
       .attr("height", 10)
       .attr("fill", "blue")
 
-
     const timer2 = undefined
     const timer = setTimeout(() => {
-
       div_data.exit() // 削除される要素
         .remove()
-
       const timer = setTimeout(() => {
-
-
         const newDataset = generateDataset()
         setDataset(newDataset)
 
@@ -92,8 +75,6 @@ export const D3Example = ({}: Props) => {
       clearTimeout(timer);
       clearTimeout(timer2);
     };
-
-
   }, [dataset])
 
 
@@ -112,18 +93,14 @@ export const D3Example = ({}: Props) => {
           height: 800
         }}>
 
-
         <svg ref={refSVG} style={{
           border: "0px solid gold",
           width: "500px",
           height: "100%",
-
-
         }}/>
 
         <div>dataset num={dataset.length}</div>
       </div>
-
     </div>
   )
 }
