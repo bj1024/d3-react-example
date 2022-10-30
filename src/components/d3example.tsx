@@ -16,24 +16,24 @@ export const D3Example = ({}: Props) => {
   // react ref of <svg />
   const refSVG = useRef<SVGSVGElement>(null);
 
-  useEffect(() => {
-    const svgElement = d3.select(refSVG.current)
-    svgElement.selectAll("rect")
-      .data(dataset)
-      .join("rect")
-      // .attr("cx", d => d[0])
-      // .attr("cy", d => d[1])
-      // .attr("r",  3)
-      .attr("x", d => d[0])
-      .attr("y", d => d[1])
-      .attr("width", 3)
-      .attr("height", 3)
-
-  }, [dataset])
-  useInterval(() => {
-    const newDataset = generateDataset()
-    setDataset(newDataset)
-  }, 1000)
+  // useEffect(() => {
+  //   const svgElement = d3.select(refSVG.current)
+  //   svgElement.selectAll("rect")
+  //     .data(dataset)
+  //     .join("rect")
+  //     // .attr("cx", d => d[0])
+  //     // .attr("cy", d => d[1])
+  //     // .attr("r",  3)
+  //     .attr("x", d => d[0])
+  //     .attr("y", d => d[1])
+  //     .attr("width", 3)
+  //     .attr("height", 3)
+  //
+  // }, [dataset])
+  // useInterval(() => {
+  //   const newDataset = generateDataset()
+  //   setDataset(newDataset)
+  // }, 1000)
 
   return (
     <div className="position-static h-100 w-100">
