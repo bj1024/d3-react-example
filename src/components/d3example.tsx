@@ -27,7 +27,26 @@ export const D3Example = ({}: Props) => {
   // react ref of <svg />
   const refSVG = useRef<SVGSVGElement>(null);
 
+  let isloaded = useRef(false);
+  // useEffect(() => {
+  //   if(!isloaded.current){
+  //     isloaded.current = true
+  //     console.log(`loaded useEffect `);
+  //   }
+  // },[])
+
+  // Reactの Strict Modeで２回Callされるのを防ぐ useEffectを使う。
   useEffect(() => {
+    if (isloaded.current) {
+      return
+    } else {
+      isloaded.current = true
+    }
+
+    if (!(dataset && refSVG.current)) {
+      return
+    }
+
     console.log(`useEffect ${dataset.length}`);
     const svgElement = d3.select(refSVG.current)
 
@@ -39,7 +58,7 @@ export const D3Example = ({}: Props) => {
       .attr("fill", "red")
       .call(exit => {
         // console.log(`exit call.`, exit);
-        exit.transition().duration(1200)
+        exit.transition().duration(800)
           .attr("width", 0)
           .attr("height", 0)
           .style("opacity", 0)
@@ -50,7 +69,7 @@ export const D3Example = ({}: Props) => {
       .text((datum, index) => `${index}-${datum[0]},${datum[1]}`) // datumは１要素、indexは配列添字
       .call(update => {
         // console.log(`update call.`, update);
-        update.transition().duration(1200)
+        update.transition().duration(800)
           .attr("fill", "gray")
       })
 
@@ -59,13 +78,13 @@ export const D3Example = ({}: Props) => {
       .text((datum, index) => `${index}-${datum[0]},${datum[1]}`) // datumは１要素、indexは配列添字
       .attr("x", d => d[0])
       .attr("y", d => d[1])
-      .attr("width", 10)
-      .attr("height", 10)
-      .style("opacity", 1)
+      .attr("width", 0)
+      .attr("height", 0)
+      .style("opacity", 0)
       .attr("fill", "blue")
       .call(enter => {
         console.log(`enter call.`, enter);
-        enter.transition().duration(1200)
+        enter.transition().duration(800)
           .attr("width", 50)
           .attr("height", 50)
           .style("opacity", 1)
@@ -96,13 +115,14 @@ export const D3Example = ({}: Props) => {
       // clearTimeout(timer);
       // clearTimeout(timer2);
     };
-  }, [])
+  }, [dataset])
 
 
-  // useInterval(() => {
-  //   const newDataset = generateDataset()
-  //   setDataset(newDataset)
-  // }, 1000)
+  useInterval(() => {
+    const newDataset = generateDataset()
+    isloaded.current = false
+    setDataset(newDataset)
+  }, 1500)
 
   return (
     <div className="position-static h-100 w-100">
