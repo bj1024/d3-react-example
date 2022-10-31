@@ -13,8 +13,8 @@ const randomInt = (min: number, max: number): number => {
 
 const generateDataset = () => (
   Array(randomInt(5, 20)).fill(0).map(() => ([
-    randomInt(0, 300),
-    randomInt(0, 300),
+    randomInt(0, 400),
+    randomInt(0, 400),
     randomInt(6, 50),
     randomInt(6, 50),
   ]))
@@ -28,6 +28,7 @@ export const D3Example = ({}: Props) => {
   const refSVG = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
+    console.log(`useEffect ${dataset.length}`);
     const svgElement = d3.select(refSVG.current)
 
     let div_data = svgElement.selectAll("rect") // 全てのRectをセレクト。
@@ -47,11 +48,6 @@ export const D3Example = ({}: Props) => {
 
     div_data  // update
       .text((datum, index) => `${index}-${datum[0]},${datum[1]}`) // datumは１要素、indexは配列添字
-      // .attr("x", d => d[0])
-      // .attr("y", d => d[1])
-      // .attr("width", 10)
-      // .attr("height", 10)
-
       .call(update => {
         // console.log(`update call.`, update);
         update.transition().duration(1200)
@@ -63,23 +59,23 @@ export const D3Example = ({}: Props) => {
       .text((datum, index) => `${index}-${datum[0]},${datum[1]}`) // datumは１要素、indexは配列添字
       .attr("x", d => d[0])
       .attr("y", d => d[1])
-      .attr("width", 0)
-      .attr("height", 0)
-      .style("opacity", 0)
+      .attr("width", 10)
+      .attr("height", 10)
+      .style("opacity", 1)
       .attr("fill", "blue")
       .call(enter => {
-        // console.log(`enter call.`, enter);
+        console.log(`enter call.`, enter);
         enter.transition().duration(1200)
           .attr("width", 50)
           .attr("height", 50)
           .style("opacity", 1)
       })
 
-    const timer = setTimeout(() => {
-      let new_dataset = generateDataset()
-      console.log(`new_dataset.${new_dataset.length}`);
-      setDataset(new_dataset)
-    }, 3 * 1000);
+    // const timer = setTimeout(() => {
+    //   let new_dataset = generateDataset()
+    //   console.log(`new_dataset.${new_dataset.length}`);
+    //   // setDataset(new_dataset)
+    // }, 3 * 1000);
 
     //   div_data.exit() // 削除される要素
     //     .remove()
@@ -97,10 +93,10 @@ export const D3Example = ({}: Props) => {
       // console.log(
       //   'Restart button has clicked. TimerID ' + String(timer) + ' has canceled.'
       // );
-      clearTimeout(timer);
+      // clearTimeout(timer);
       // clearTimeout(timer2);
     };
-  }, [dataset])
+  }, [])
 
 
   // useInterval(() => {
@@ -112,16 +108,18 @@ export const D3Example = ({}: Props) => {
     <div className="position-static h-100 w-100">
       <div
         style={{
-          backgroundColor: "#e5e5e5",
+          color: "#333",
+          backgroundColor: "#f8f8f8",
           padding: 0,
-          width: 800,
-          height: 800
+          width: 500,
+          height: 500
         }}>
 
         <svg ref={refSVG} style={{
-          border: "0px solid gold",
-          width: "500px",
-          height: "100%",
+          border: "1px solid #666",
+          backgroundColor: "#101010",
+          width: 500,
+          height: 500,
         }}/>
 
         <div>dataset num={dataset.length}</div>
