@@ -36,44 +36,69 @@ export const D3Example = ({}: Props) => {
     // enter,exit,updateの要素が生成される。
     div_data.exit() // 削除される要素
       .attr("fill", "red")
+      .call(exit => {
+        // console.log(`exit call.`, exit);
+        exit.transition().duration(1200)
+          .attr("width", 0)
+          .attr("height", 0)
+          .style("opacity", 0)
+          .remove()
+      })
 
     div_data  // update
       .text((datum, index) => `${index}-${datum[0]},${datum[1]}`) // datumは１要素、indexは配列添字
-      .attr("x", d => d[0])
-      .attr("y", d => d[1])
-      .attr("width", 10)
-      .attr("height", 10)
-      .attr("fill", "yellow")
+      // .attr("x", d => d[0])
+      // .attr("y", d => d[1])
+      // .attr("width", 10)
+      // .attr("height", 10)
+
+      .call(update => {
+        // console.log(`update call.`, update);
+        update.transition().duration(1200)
+          .attr("fill", "gray")
+      })
 
     div_data.enter()  // 新規要素
       .append("rect")
       .text((datum, index) => `${index}-${datum[0]},${datum[1]}`) // datumは１要素、indexは配列添字
       .attr("x", d => d[0])
       .attr("y", d => d[1])
-      .attr("width", 10)
-      .attr("height", 10)
+      .attr("width", 0)
+      .attr("height", 0)
+      .style("opacity", 0)
       .attr("fill", "blue")
+      .call(enter => {
+        // console.log(`enter call.`, enter);
+        enter.transition().duration(1200)
+          .attr("width", 50)
+          .attr("height", 50)
+          .style("opacity", 1)
+      })
 
-    const timer2 = undefined
     const timer = setTimeout(() => {
-      div_data.exit() // 削除される要素
-        .remove()
-      const timer = setTimeout(() => {
-        const newDataset = generateDataset()
-        setDataset(newDataset)
+      let new_dataset = generateDataset()
+      console.log(`new_dataset.${new_dataset.length}`);
+      setDataset(new_dataset)
+    }, 3 * 1000);
 
-      }, 2 * 1000);
-
-    }, 1 * 1000);
-    console.log('TimerID ' + String(timer) + ' has started.');
+    //   div_data.exit() // 削除される要素
+    //     .remove()
+    //   const timer = setTimeout(() => {
+    //     const newDataset = generateDataset()
+    //     setDataset(newDataset)
+    //
+    //   }, 2 * 1000);
+    //
+    // }, 1 * 1000);
+    // console.log('TimerID ' + String(timer) + ' has started.');
 
     //クリーンアップ
     return () => {
-      console.log(
-        'Restart button has clicked. TimerID ' + String(timer) + ' has canceled.'
-      );
+      // console.log(
+      //   'Restart button has clicked. TimerID ' + String(timer) + ' has canceled.'
+      // );
       clearTimeout(timer);
-      clearTimeout(timer2);
+      // clearTimeout(timer2);
     };
   }, [dataset])
 
