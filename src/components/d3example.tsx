@@ -23,6 +23,7 @@ const generateDataset = () => (
 export const D3Example = ({}: Props) => {
 
   const [dataset, setDataset] = useState(generateDataset())
+  const [mystate, setMyState] = useState(0)
 
   // react ref of <svg />
   const refSVG = useRef<SVGSVGElement>(null);
