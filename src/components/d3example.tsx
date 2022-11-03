@@ -5,6 +5,11 @@ import useInterval from "../lib/useinterval";
 
 type Props = {}
 
+const ITEM_NUM_MIN = 1
+const ITEM_NUM_MAX = 10
+const SVG_WIDTH = 300
+const SVG_HEIGHT = 300
+
 const randomInt = (min: number, max: number): number => {
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -12,9 +17,9 @@ const randomInt = (min: number, max: number): number => {
 }
 
 const generateDataset = () => (
-  Array(randomInt(5, 20)).fill(0).map(() => ([
-    randomInt(0, 400),
-    randomInt(0, 400),
+  Array(randomInt(ITEM_NUM_MIN, ITEM_NUM_MAX)).fill(0).map(() => ([
+    randomInt(0, SVG_WIDTH),
+    randomInt(0, SVG_HEIGHT),
     randomInt(6, 50),
     randomInt(6, 50),
   ]))
@@ -23,19 +28,12 @@ const generateDataset = () => (
 export const D3Example = ({}: Props) => {
 
   const [dataset, setDataset] = useState(generateDataset())
-  const [mystate, setMyState] = useState(0)
 
   // react ref of <svg />
   const refSVG = useRef<SVGSVGElement>(null);
+  const refCount = useRef<number>(0);
 
   let isloaded = useRef(false);
-  // useEffect(() => {
-  //   if(!isloaded.current){
-  //     isloaded.current = true
-  //     console.log(`loaded useEffect `);
-  //   }
-  // },[])
-
   // Reactの Strict Modeで２回Callされるのを防ぐ useEffectを使う。
   useEffect(() => {
     if (isloaded.current) {
@@ -61,7 +59,7 @@ export const D3Example = ({}: Props) => {
         // console.log(`exit call.`, exit);
         exit.transition().duration(800)
           .attr("width", 0)
-          .attr("height", 0)
+          .attr("height", SVG_HEIGHT)
           .style("opacity", 0)
           .remove()
       })
@@ -71,6 +69,7 @@ export const D3Example = ({}: Props) => {
       .call(update => {
         // console.log(`update call.`, update);
         update.transition().duration(800)
+          .attr("y", SVG_HEIGHT / 2)
           .attr("fill", "gray")
       })
 
@@ -78,7 +77,7 @@ export const D3Example = ({}: Props) => {
       .append("rect")
       .text((datum, index) => `${index}-${datum[0]},${datum[1]}`) // datumは１要素、indexは配列添字
       .attr("x", d => d[0])
-      .attr("y", d => d[1])
+      .attr("y", 10)
       .attr("width", 0)
       .attr("height", 0)
       .style("opacity", 0)
@@ -86,8 +85,8 @@ export const D3Example = ({}: Props) => {
       .call(enter => {
         console.log(`enter call.`, enter);
         enter.transition().duration(800)
-          .attr("width", 50)
-          .attr("height", 50)
+          .attr("width", 8)
+          .attr("height", 8)
           .style("opacity", 1)
       })
 
@@ -120,10 +119,11 @@ export const D3Example = ({}: Props) => {
 
 
   useInterval(() => {
+    refCount.current = dataset.length
     const newDataset = generateDataset()
     isloaded.current = false
     setDataset(newDataset)
-  }, 1500)
+  }, 3000)
 
   return (
     <div className="position-static h-100 w-100">
@@ -132,18 +132,22 @@ export const D3Example = ({}: Props) => {
           color: "#333",
           backgroundColor: "#f8f8f8",
           padding: 0,
-          width: 500,
-          height: 500
+          width: SVG_WIDTH,
+          height: SVG_HEIGHT,
+
         }}>
 
         <svg ref={refSVG} style={{
-          border: "1px solid #666",
+          border: "2px solid #aaa",
           backgroundColor: "#101010",
-          width: 500,
-          height: 500,
+          width: SVG_WIDTH - 2,
+          height: SVG_HEIGHT - 2,
+          marginLeft: "auto",
+          marginRight: "auto",
+
         }}/>
 
-        <div>dataset num={dataset.length}</div>
+        <div>{refCount.current} to {dataset.length} ({dataset.length - refCount.current})</div>
       </div>
     </div>
   )
