@@ -10,6 +10,16 @@ const ITEM_NUM_MAX = 10
 const SVG_WIDTH = 300
 const SVG_HEIGHT = 300
 
+const RECT_WIDTH = 20
+const RECT_HEIGHT = 20
+const RECT_WIDTH_MAX = 10
+const RECT_HEIGHT_MAX = 10
+const RECT_WIDTH_MIN = 1
+const RECT_HEIGHT_MIN = 1
+const ENTER_Y = 0
+const UPDATE_Y = SVG_HEIGHT / 2
+const EXIT_Y = SVG_HEIGHT
+
 const randomInt = (min: number, max: number): number => {
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -20,12 +30,12 @@ const generateDataset = () => (
   Array(randomInt(ITEM_NUM_MIN, ITEM_NUM_MAX)).fill(0).map(() => ([
     randomInt(0, SVG_WIDTH),
     randomInt(0, SVG_HEIGHT),
-    randomInt(6, 50),
-    randomInt(6, 50),
+    randomInt(RECT_WIDTH_MIN, RECT_WIDTH_MAX),
+    randomInt(RECT_HEIGHT_MIN, RECT_HEIGHT_MAX),
   ]))
 )
 
-export const D3Example = ({}: Props) => {
+export const D3ExampleRect = ({}: Props) => {
 
   const [dataset, setDataset] = useState(generateDataset())
 
@@ -55,22 +65,24 @@ export const D3Example = ({}: Props) => {
     // enter,exit,updateの要素が生成される。
     div_data.exit() // 削除される要素
       .attr("fill", "red")
-      .call(exit => {
+      .call(selection => {
         // console.log(`exit call.`, exit);
-        exit.transition().duration(800)
+        selection.transition().duration(800)
+          .attr("y", EXIT_Y)
           .attr("width", 0)
-          .attr("height", SVG_HEIGHT)
+          .attr("height", 0)
           .style("opacity", 0)
           .remove()
       })
 
     div_data  // update
       .text((datum, index) => `${index}-${datum[0]},${datum[1]}`) // datumは１要素、indexは配列添字
-      .call(update => {
+      .call(selection => {
         // console.log(`update call.`, update);
-        update.transition().duration(800)
-          .attr("y", SVG_HEIGHT / 2)
+        selection.transition().duration(800)
+          .attr("y", UPDATE_Y)
           .attr("fill", "gray")
+        // .attr('transform','rotate(20)')
       })
 
     div_data.enter()  // 新規要素
@@ -82,11 +94,13 @@ export const D3Example = ({}: Props) => {
       .attr("height", 0)
       .style("opacity", 0)
       .attr("fill", "blue")
-      .call(enter => {
-        console.log(`enter call.`, enter);
-        enter.transition().duration(800)
-          .attr("width", 8)
-          .attr("height", 8)
+      .call(selection => {
+        console.log(`enter call.`, selection);
+        selection.transition().duration(800)
+          .attr("x", d => d[0] - RECT_WIDTH / 2)
+          .attr("y", ENTER_Y)
+          .attr("width", RECT_WIDTH)
+          .attr("height", RECT_HEIGHT)
           .style("opacity", 1)
       })
 
@@ -123,7 +137,7 @@ export const D3Example = ({}: Props) => {
     const newDataset = generateDataset()
     isloaded.current = false
     setDataset(newDataset)
-  }, 3000)
+  }, 2000)
 
   return (
     <div className="position-static h-100 w-100">
@@ -153,4 +167,4 @@ export const D3Example = ({}: Props) => {
   )
 }
 
-export default D3Example
+export default D3ExampleRect
